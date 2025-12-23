@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { logout } from "../features/user/userSlice";
 import { useState } from "react";
+import { color } from '../components/ui/theme/Color'
 // Lucide icons
 import {
   User,
@@ -24,22 +25,32 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+      <div className="min-h-8 w-full flex justify-center items-center"
+        style={{ background: color.primary, color: color.primaryText }}
+      >
+        <p className="text-sm p-0 m-0 text-white">
+          Special Deal 🔥 |   🎉Extra 20% OFF for First Order
+        </p>
+      </div>
       {/* Main header */}
-      <div className="bg-blue-600">
+      <div className="bg-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-4 h-14 md:h-16">
             {/* Mobile menu button */}
             <button
-              className={`lg:hidden p-2 text-white ${isMenuOpen ? "bg-white/10" : ""} hover:bg-white/20 rounded-md transition-colors`}
+              className={`lg:hidden p-2 hover:bg-[var(--hover-bg)] rounded-md transition-colors`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
+              style={{ background: isMenuOpen ? color.secondary : "", color: color.secondaryText, ['--hover-bg' as any]: color.primary }}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
             {/* Logo */}
             <Link href="/" className="flex flex-col items-start shrink-0 group">
-              <span className="text-xl md:text-2xl font-bold italic text-white">
+              <span
+                className="text-xl md:text-2xl font-bold italic"
+                style={{ color: color.primary }}>
                 Flipkart
               </span>
 
@@ -48,11 +59,12 @@ export default function Navbar() {
             {/* Search bar (desktop) */}
             <div className="flex-1 max-w-2xl mx-auto hidden md:block">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" size={20} />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2" size={20} />
                 <input
                   type="search"
                   placeholder="Search for Products, Brands and More"
-                  className="w-full pl-10 h-9 bg-white border-none rounded-sm text-sm placeholder:text-blue-600 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+                  className="w-full pl-10 h-9 border-none rounded-sm text-sm placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+                  style={{ background: color.secondary, color: color.secondaryText }}
                 />
               </div>
             </div>
@@ -63,44 +75,64 @@ export default function Navbar() {
 
               {/* Cart */}
               <Link href="/cart"
-                className="flex items-center gap-1 px-3 py-2 text-white font-medium bg-white/10 hover:bg-white/20 rounded transition-colors relative"
+                className={`flex items-center gap-1 px-3 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative`}
                 onClick={() => { setIsMenuOpen(false) }}
+                data-cart-icon
+                style={{ background: color.secondary, color: color.secondaryText, ['--hover-bg' as any]: color.hoverBg }}
               >
                 <ShoppingCart size={20} />
 
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-2 text-xs font-bold">{cartCount}</span>
+                  <span className="absolute -top-2 -right-2  rounded-full px-2 text-xs font-bold"
+                    style={{ background: color.primary, color: color.primaryText }}
+                  >{cartCount}</span>
                 )}
               </Link>
 
               {/* Favorites */}
               <Link href="/seller"
-                className="lg:flex items-center gap-1 px-3 py-2 text-white font-medium bg-white/10 hover:bg-white/20 rounded transition-colors"
+                className="lg:flex items-center gap-1 px-3 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors"
                 onClick={() => { setIsMenuOpen(false) }}
+                style={{ background: color.secondary, color: color.secondaryText, ['--hover-bg' as any]: color.hoverBg }}
               >
                 <Heart size={18} />
 
               </Link>
 
               {/* Login/Profile */}
-              <div className="hidden md:flex items-center gap-1 px-4 py-2 text-white font-medium bg-white/10 hover:bg-white/20 rounded transition-colors relative group"
-                onMouseEnter={() => setShowProfileMenu(true)} onMouseLeave={() => setShowProfileMenu(false)}>
+              <div className="hidden md:flex items-center gap-1 px-4 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative group"
+                onMouseEnter={() => setShowProfileMenu(true)} onMouseLeave={() => setShowProfileMenu(false)}
+                style={{ background: color.secondary, color: color.secondaryText, ['--hover-bg' as any]: color.hoverBg }}
+
+              >
                 <User size={18} />
 
                 <ChevronDown size={16} />
                 {/* Dropdown */}
                 {showProfileMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded shadow-lg border border-gray-200 py-2 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-44 rounded shadow-lg border border-gray-200 py-2 z-50"
+                    style={{ background: color.secondary, color: color.secondaryText }}
+                  >
                     {!username ? (
                       <>
-                        <Link className="block px-4 py-2 hover:bg-blue-50 text-blue-600" href="/login">Login</Link>
-                        <Link className="block px-4 py-2 hover:bg-blue-50 text-blue-600" href="/register">Register</Link>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/login"
+                          style={{ color: color.secondaryText, ['--hover-bg' as any]: color.primary }}
+                        >Login</Link>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/register"
+                          style={{ color: color.secondaryText, ['--hover-bg' as any]: color.primary }}
+                        >Register</Link>
                       </>
                     ) : (
                       <>
-                        <span className="block px-4 py-2 font-semibold text-gray-800">Hello, {username}</span>
-                        <Link className="block px-4 py-2 hover:bg-blue-50 text-blue-600" href="/profile">Profile</Link>
-                        <Link className="block px-4 py-2 hover:bg-blue-50 text-blue-600" href="/change-password">Change Password</Link>
+                        <span className="block px-4 py-2 font-semibold "
+                          style={{ color: color.primaryText }}
+                        >Hello, {username}</span>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/profile"
+                          style={{ ['--hover-bg' as any]: color.primary }}
+                        >Profile</Link>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/change-password"
+                          style={{ ['--hover-bg' as any]: color.primary }}
+                        >Change Password</Link>
                         <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => dispatch(logout())}>Logout</button>
                       </>
                     )}
@@ -113,42 +145,63 @@ export default function Navbar() {
       </div>
 
       {/* Mobile search bar */}
-      <div className="md:hidden  bg-blue-600 px-4 pb-3">
+      <div className="md:hidden px-4 pb-3">
         <div className="relative container mx-auto">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600" size={18} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2" size={18}
+            style={{ color: color.secondaryText }}
+          />
           <input
             type="search"
             placeholder="Search for Products, Brands and More"
-            className="w-full pl-10 h-8 bg-white border-none rounded-sm text-sm placeholder:text-blue-600 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+            className="w-full pl-10 h-8 border-none rounded-sm text-sm  focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+            style={{ background: color.secondary, color: color.secondaryText }}
           />
         </div>
       </div>
 
       {/* Mobile slide-out menu */}
       <div
-        className={`lg:hidden fixed bg-blue-100 inset-0 top-[52px] z-50 transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        className={`lg:hidden fixed inset-0 top-22 z-50 transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
           }`}
+        style={{ background: color.background }}
       >
         <div className="container mx-auto px-4 py-4 h-full overflow-y-auto">
           {/* Mobile login/profile area */}
-          <div className="flex items-center gap-3 p-4 bg-blue-600 rounded-lg mb-4">
-            <User size={24} className="text-white" />
+          <div
+            className="flex items-center gap-3 p-4 rounded-lg mb-4"
+            style={{ background: color.primary, color: color.primaryText }}
+          >
+            <User size={24} style={{ color: color.primaryText }} />
             <div>
-              <p className="text-white font-medium">{username ? `Hello, ${username}` : 'Login & Signup'}</p>
-              <p className="text-white/70 text-sm">Manage orders, wishlist</p>
+              <p className="font-medium">{username ? `Hello, ${username}` : 'Login & Signup'}</p>
+              <p className="text-sm"
+                style={{ color: color.secondaryText }}
+              >Manage orders, wishlist</p>
             </div>
           </div>
           {/* Mobile menu links */}
           <div className="flex flex-col gap-2">
             {!username ? (
               <>
-                <Link href="/login" className="block px-4 py-2 rounded hover:bg-blue-100 text-blue-600 font-medium" onClick={() => { setIsMenuOpen(false) }}>Login</Link>
-                <Link href="/register" className="block px-4 py-2 rounded hover:bg-blue-100 text-blue-600 font-medium" onClick={() => { setIsMenuOpen(false) }}>Register</Link>
+                <Link href="/login" className="block px-4 py-2 rounded hover:bg-[var(--hover-bg)] font-medium"
+                  onClick={() => { setIsMenuOpen(false) }}
+                  style={{ ['--hover-bg' as any]: color.primary, color: color.primaryText, background: color.secondary }}
+                >Login</Link>
+                <Link href="/register" className={`block px-4 py-2 rounded hover:bg-[var(--hover-bg)] font-medium`}
+                  onClick={() => { setIsMenuOpen(false) }}
+                  style={{ color: color.primaryText, background: color.secondary, ['--hover-bg' as any]: color.primary }}
+                >Register</Link>
               </>
             ) : (
               <>
-                <Link href="/seller-dashboard" className="block px-4 py-2 rounded hover:bg-blue-100 text-blue-600 font-medium">Dashboard</Link>
-                <Link href="/profile" className="block px-4 py-2 rounded hover:bg-blue-100 text-blue-600 font-medium" onClick={() => { setIsMenuOpen(false) }}>Settings</Link>
+                <Link href="/seller-dashboard" className="block px-4 py-2 rounded font-medium"
+                  style={{ color: color.secondaryText, background: color.secondary }}
+                >Dashboard</Link>
+                <Link href="/profile"
+                  className="block px-4 py-2 rounded font-medium"
+                  style={{ color: color.secondaryText, background: color.secondary }}
+                  onClick={() => { setIsMenuOpen(false) }}>Settings</Link>
                 <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700 font-medium" onClick={() => { dispatch(logout()); setIsMenuOpen(false); }}>Logout</button>
               </>
             )}
