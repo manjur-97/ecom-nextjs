@@ -116,11 +116,13 @@ export default function DynamicProductSection({
             >
               {/* Product Image Container */}
               <div className="relative bg-gray-200 aspect-square overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
+                <Link href={`/product/${product.id}`} className="w-full h-full block">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </Link>
 
 
                 {/* Badge */}
@@ -145,8 +147,8 @@ export default function DynamicProductSection({
               {/* Product Info */}
               <div className="p-3">
                 {/* Product Name */}
-                <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600">
-                  {product.name}
+                <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">
+                  <Link href={`/product/${product.id}`} className="hover:text-blue-600">{product.name}</Link>
                 </h3>
 
                 {/* Price Section */}

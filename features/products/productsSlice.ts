@@ -35,7 +35,7 @@ const initialState: ProductsState = {
       sizes: ['128GB', '256GB', '512GB'],
     },
     {
-      id: '1',
+      id: '3',
       name: 'A high-performance laptop for work and play.',
       description: 'A high-performance laptop for work and play.',
       image: '/public/file.svg',
@@ -44,7 +44,7 @@ const initialState: ProductsState = {
       sizes: ['13"', '15"', '17"'],
     },
     {
-      id: '2',
+      id: '4',
       name: 'Smartphone',
       description: 'Latest-gen smartphone with amazing features.',
       image: '/public/window.svg',
@@ -53,7 +53,7 @@ const initialState: ProductsState = {
       sizes: ['128GB', '256GB', '512GB'],
     },
     {
-      id: '1',
+      id: '5',
       name: 'A high-performance laptop for work and play.',
       description: 'A high-performance laptop for work and play.',
       image: '/public/file.svg',
@@ -62,7 +62,7 @@ const initialState: ProductsState = {
       sizes: ['13"', '15"', '17"'],
     },
     {
-      id: '2',
+      id: '5',
       name: 'Smartphone',
       description: 'Latest-gen smartphone with amazing features.',
       image: '/public/window.svg',
@@ -71,7 +71,7 @@ const initialState: ProductsState = {
       sizes: ['128GB', '256GB', '512GB'],
     },
     {
-      id: '1',
+      id: '7',
       name: 'A high-performance laptop for work and play.',
       description: 'A high-performance laptop for work and play.',
       image: '/public/file.svg',
@@ -80,7 +80,7 @@ const initialState: ProductsState = {
       sizes: ['13"', '15"', '17"'],
     },
     {
-      id: '2',
+      id: '8',
       name: 'Smartphone',
       description: 'Latest-gen smartphone with amazing features.',
       image: '/public/window.svg',
@@ -89,7 +89,7 @@ const initialState: ProductsState = {
       sizes: ['128GB', '256GB', '512GB'],
     },
     {
-      id: '1',
+      id: '8',
       name: 'A high-performance laptop for work and play.',
       description: 'A high-performance laptop for work and play.',
       image: '/public/file.svg',
@@ -98,7 +98,7 @@ const initialState: ProductsState = {
       sizes: ['13"', '15"', '17"'],
     },
     {
-      id: '2',
+      id: '10',
       name: 'Smartphone',
       description: 'Latest-gen smartphone with amazing features.',
       image: '/public/window.svg',

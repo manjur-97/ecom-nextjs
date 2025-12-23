@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addToCart } from "../../features/cart/cartSlice";
 import BuyModal from "./BuyModal";
 import { Heart, ShoppingCart as CartIcon } from "lucide-react";
+import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { color } from "./theme/Color";
 
@@ -128,11 +129,13 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
 
 
           {/* Product Image */}
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-contain p-6 drop-shadow-2xl group-hover:scale-110 transition-transform duration-300"
-          />
+          <Link href={`/product/${product.id}`} className="w-full h-full block">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-contain p-6 drop-shadow-2xl group-hover:scale-110 transition-transform duration-300"
+            />
+          </Link>
 
           {/* Discount Badge */}
           {discount > 0 && (
@@ -156,10 +159,8 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
           style={{ background: color.secondary, color: color.secondaryText, height: 'calc(100% - 16rem)' }}
         >
           {/* Title */}
-          <h3 className="mb-1 line-clamp-3 font-semibold"
-
-          >
-            {product.name}
+          <h3 className="mb-1 line-clamp-3 font-semibold">
+            <Link href={`/product/${product.id}`} className="hover:text-pink-600">{product.name}</Link>
           </h3>
 
           {/* Price Section */}
