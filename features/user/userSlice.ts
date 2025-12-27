@@ -5,10 +5,21 @@ interface UserState {
   username: string | null;
 }
 
-const initialState: UserState = {
+let initialState: UserState = {
   isAuthenticated: false,
   username: null,
 };
+
+if (typeof window !== "undefined") {
+  const user = localStorage.getItem("userAuth");
+  if (user) {
+    const { username } = JSON.parse(user);
+    initialState = {
+      isAuthenticated: true,
+      username,
+    };
+  }
+}
 
 const userSlice = createSlice({
   name: 'user',

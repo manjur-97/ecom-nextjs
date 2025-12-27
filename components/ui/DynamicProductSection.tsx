@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
+import { Clock, Heart } from "lucide-react";
 import Link from "next/link";
 import { color } from "./theme/Color";
 
@@ -26,10 +26,10 @@ export interface DynamicProductSectionProps {
 // Countdown Timer Component
 function CountdownTimer({ expiresAt }: { expiresAt?: Date | string }) {
   const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
+    days: 1,
+    hours: 1,
+    minutes: 1,
+    seconds: 1,
   });
 
   useEffect(() => {
@@ -61,11 +61,12 @@ function CountdownTimer({ expiresAt }: { expiresAt?: Date | string }) {
   if (!expiresAt) return null;
 
   return (
-    <div className="flex gap-1 text-xs font-bold bg-black/60 text-white py-1 px-2 rounded">
-      <span className="bg-black px-1.5 rounded">{String(timeLeft.days).padStart(2, "0")}d</span>
-      <span className="bg-black px-1.5 rounded">{String(timeLeft.hours).padStart(2, "0")}h</span>
-      <span className="bg-black px-1.5 rounded">{String(timeLeft.minutes).padStart(2, "0")}m</span>
-      <span className="bg-black px-1.5 rounded">{String(timeLeft.seconds).padStart(2, "0")}s</span>
+    <div className="flex gap-1 text-xs font-bold bg-white/60 text-white py-1 px-2 rounded justify-center items-center" >
+      <Clock className="w-3.5 h-3.5 " style={{color:color.primary}}/>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.days).padStart(2, "0")}d</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.hours).padStart(2, "0")}h</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.minutes).padStart(2, "0")}m</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.seconds).padStart(2, "0")}s</span>
     </div>
   );
 }
@@ -93,9 +94,9 @@ export default function DynamicProductSection({
       <div className="max-w-full mx-auto px-4">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-2xl font-bold"
-          style={{color:color.primary}}
+            style={{ color: color.primary }}
           >{title}</h2>
-         
+
           <Link
             href={viewMoreLink}
             className="text-blue-600 hover:text-blue-700 font-sm flex items-center gap-1 transition"
@@ -104,81 +105,75 @@ export default function DynamicProductSection({
             <span className="text-xl">›</span>
           </Link>
         </div>
-         <hr className="mb-4"/>
-        
+        <hr className="mb-4" />
+
 
         {/* Products Grid */}
         <div className={`grid ${gridClass} ${gap}`}>
-          {products.map((product) => (
+          {products.slice(0, 6).map((product) => (
             <div
               key={product.id}
               className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
             >
-              {/* Product Image Container */}
-              <div className="relative bg-gray-200 aspect-square overflow-hidden">
-                <Link href={`/product/${product.id}`} className="w-full h-full block">
+              <Link href={`/product/${product.id}`} className="w-full h-full block">
+                {/* Product Image */}
+                <div className="relative bg-gray-200 aspect-square overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                </Link>
+
+                  {product.badge && (
+                    <div
+                      className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full ${product.badgeColor || "bg-red-600"
+                        }`}
+                    >
+                      {product.badge}
+                    </div>
+                  )}
 
 
-                {/* Badge */}
-                {product.badge && (
-                  <div
-                    className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full ${
-                      product.badgeColor || "bg-red-600"
-                    }`}
-                  >
-                    {product.badge}
-                  </div>
-                )}
-
-                {/* Countdown Timer */}
-                {product.expiresAt && (
                   <div className="absolute bottom-2 left-2 right-2">
-                    <CountdownTimer expiresAt={product.expiresAt} />
+
+                    <CountdownTimer expiresAt="2026-01-05" />
                   </div>
-                )}
-              </div>
-
-              {/* Product Info */}
-              <div className="p-3">
-                {/* Product Name */}
-                <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">
-                  <Link href={`/product/${product.id}`} className="hover:text-blue-600">{product.name}</Link>
-                </h3>
-
-                {/* Price Section */}
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg font-bold text-gray-900">
-                    ${product.price.toFixed(0)}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-gray-500 line-through">
-                      ${product.originalPrice.toFixed(0)}
-                    </span>
-                  )}
                 </div>
 
-                {/* Discount & Rating */}
-                <div className="flex items-center justify-between text-xs">
-                  {product.discount && (
-                    <span className="text-red-600 font-bold">
-                      {product.discount}% OFF
+                {/* Product Info */}
+                <div className="p-3">
+                  <h3 className="text-sm  font-semibold text-gray-800 mb-2 hover:text-[var(--hover-text)]"
+                    style={{ ['--hover-text' as any]: color.primary, }}
+                  >
+                    {product.name}
+                  </h3>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg font-bold text-gray-700"
+                      
+                    >
+                      ৳{product.price.toFixed(0)}
                     </span>
-                  )}
-                  {product.rating && (
-                    <span className="text-yellow-500">
-                      ⭐ {product.rating}
-                    </span>
-                  )}
+                    {product.price && (
+                      <span className="text-sm text-gray-500 line-through">
+                        ৳{product.price.toFixed(0)}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs">
+                    {product.discount && (
+                      <span className="text-red-600 font-bold">
+                        {product.discount}% OFF
+                      </span>
+                    )}
+                    <span className="text-yellow-500">⭐ ⭐⭐ ⭐</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
           ))}
+
         </div>
       </div>
     </section>

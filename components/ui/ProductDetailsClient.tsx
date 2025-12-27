@@ -171,8 +171,8 @@ export default function ProductDetailsClient({ id }: Props) {
                         <div className="mb-3 text-gray-600">SKU: {product.id}</div>
 
                         <div className="flex items-baseline gap-3 mb-4">
-                            <span className="text-3xl font-extrabold text-pink-600">${product.offerPrice || product.price}</span>
-                            {product.offerPrice && <span className="text-sm text-gray-500 line-through">${product.price}</span>}
+                            <span className="text-3xl font-extrabold text-pink-600">৳{product.offerPrice || product.price}</span>
+                            {product.offerPrice && <span className="text-sm text-gray-500 line-through">৳{product.price}</span>}
                         </div>
 
                         <div className="mb-4">
@@ -227,7 +227,7 @@ export default function ProductDetailsClient({ id }: Props) {
                                     <ul className="list-disc pl-5 space-y-1">
                                         <li>High quality material</li>
                                         <li>Available in multiple sizes</li>
-                                        <li>Free shipping on orders over $100</li>
+                                        <li>Free shipping on orders over ৳100</li>
                                     </ul>
                                 )}
                                 {activeTab === 'reviews' && (

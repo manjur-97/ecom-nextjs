@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.quick-actions {
+  @apply absolute bottom-0 left-0 right-0 translate-y-full opacity-0 transition-all duration-300 bg-gradient-to-t from-black/70 to-transparent p-4 flex items-center justify-center gap-3;
+}
+
+/* Hover effect */
+.product-card:hover .quick-actions {
+  @apply translate-y-0 opacity-100;
+}

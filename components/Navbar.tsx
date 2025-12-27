@@ -17,11 +17,12 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
-  const cartCount = useSelector((state: RootState) => state.cart.items.reduce((a, b) => a + b.quantity, 0));
+  const cartCount = useSelector((state: RootState) => state.cart.items.length);
   const username = useSelector((state: RootState) => state.user.username);
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  let profileMenuTimeout: NodeJS.Timeout | null = null;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -51,7 +52,7 @@ export default function Navbar() {
               <span
                 className="text-xl md:text-2xl font-bold italic"
                 style={{ color: color.primary }}>
-                Flipkart
+                Hello Bangla
               </span>
 
             </Link>
@@ -100,18 +101,31 @@ export default function Navbar() {
               </Link>
 
               {/* Login/Profile */}
-              <div className="hidden md:flex items-center gap-1 px-4 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative group"
-                onMouseEnter={() => setShowProfileMenu(true)} onMouseLeave={() => setShowProfileMenu(false)}
+              <div
+                className="hidden md:flex items-center gap-1 px-4 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative group"
+                onMouseEnter={() => {
+                  if (profileMenuTimeout) clearTimeout(profileMenuTimeout);
+                  setShowProfileMenu(true);
+                }}
+                onMouseLeave={() => {
+                  profileMenuTimeout = setTimeout(() => setShowProfileMenu(false), 120);
+                }}
                 style={{ background: color.secondary, color: color.secondaryText, ['--hover-bg' as any]: color.hoverBg }}
-
               >
                 <User size={18} />
-
                 <ChevronDown size={16} />
                 {/* Dropdown */}
                 {showProfileMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-44 rounded shadow-lg border border-gray-200 py-2 z-50"
+                  <div
+                    className="absolute right-0 top-full mt-2 w-60 rounded shadow-lg border border-gray-200 py-2 z-50"
                     style={{ background: color.secondary, color: color.secondaryText }}
+                    onMouseEnter={() => {
+                      if (profileMenuTimeout) clearTimeout(profileMenuTimeout);
+                      setShowProfileMenu(true);
+                    }}
+                    onMouseLeave={() => {
+                      profileMenuTimeout = setTimeout(() => setShowProfileMenu(false), 120);
+                    }}
                   >
                     {!username ? (
                       <>
@@ -126,11 +140,11 @@ export default function Navbar() {
                       <>
                         <span className="block px-4 py-2 font-semibold "
                           style={{ color: color.primaryText }}
-                        >Hello, {username}</span>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/profile"
+                        > Hello, {username}</span>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/account"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Profile</Link>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/change-password"
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="account/change-password"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Change Password</Link>
                         <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => dispatch(logout())}>Logout</button>

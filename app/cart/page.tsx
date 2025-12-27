@@ -49,12 +49,12 @@ export default function CartPage() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Your Cart</h1>
+          <h1 className="text-xl font-bold text-gray-800">Your Cart</h1>
           <Link
             href="/"
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-500 "
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
             Continue Shopping
           </Link>
         </div>
@@ -88,16 +88,13 @@ export default function CartPage() {
 
                       {/* Product Details */}
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-gray-800 mb-1">
+                        <h3 className="text-gray-800 mb-1">
                           {item.name}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3">
-                          {item.description}
-                        </p>
 
                         {/* Price Section */}
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="text-2xl font-bold text-gray-900">
+                          <span className="text-xl font-bold text-gray-700">
                             ${itemPrice.toFixed(2)}
                           </span>
                           {item.offerPrice && (
@@ -155,10 +152,10 @@ export default function CartPage() {
 
                           <button
                             onClick={() => dispatch(removeFromCart(item.id))}
-                            className="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 transition"
+                            className="text-red-500 hover:text-red-600 font-semibold flex items-center gap-1 transition"
                           >
                             <Trash2 size={18} />
-                            Remove
+                            
                           </button>
                         </div>
                       </div>
@@ -166,7 +163,7 @@ export default function CartPage() {
                       {/* Item Total */}
                       <div className="text-right">
                         <div className="text-sm text-gray-600 mb-2">Total</div>
-                        <div className="text-xl font-bold text-gray-900">
+                        <div className="text-xl font-bold text-gray-700">
                           ${(itemPrice * item.quantity).toFixed(2)}
                         </div>
                       </div>
@@ -208,17 +205,11 @@ export default function CartPage() {
 
               <button
                 onClick={() => router.push("/checkout")}
-                className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 rounded-lg transition shadow-md mb-3"
+                className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 rounded-lg transition shadow mb-3"
               >
-                Proceed to Checkout
+                Checkout ({cartItems.reduce((a, b) => a + b.quantity, 0)})
               </button>
 
-              <button
-                onClick={() => dispatch(clearCart())}
-                className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold py-2 rounded-lg transition"
-              >
-                Clear Cart
-              </button>
             </div>
           </div>
         </div>

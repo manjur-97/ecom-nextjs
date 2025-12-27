@@ -4,7 +4,7 @@ import { Product } from "../../features/products/productsSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { addToCart } from "../../features/cart/cartSlice";
 import BuyModal from "./BuyModal";
-import { Heart, ShoppingCart as CartIcon } from "lucide-react";
+import { Heart, ShoppingCart as CartIcon, ShoppingBag, Eye, Star } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { color } from "./theme/Color";
@@ -14,13 +14,13 @@ type Props = {
   accent?: string;
 };
 
+
 export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
   const dispatch = useAppDispatch();
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const cartCount = useAppSelector((state) => state.cart.items.length);
-
 
   const handleAddToCart = (e: React.MouseEvent) => {
     const button = e.currentTarget as HTMLElement;
@@ -53,8 +53,8 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
       const cartRect = cartIcon.getBoundingClientRect();
       const startX = rect.left;
       const startY = rect.top;
-      const endX = cartRect.left ;
-      const endY = cartRect.top ;
+      const endX = cartRect.left;
+      const endY = cartRect.top;
 
       let progress = 0;
       const duration = 3000;
@@ -98,6 +98,7 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
               toast.dismiss(t.id);
             }}
             className="bg-pink-500 hover:bg-pink-600 px-3 py-1 rounded font-semibold text-sm"
+            style={{ background: color.primary, }}
           >
             Checkout
           </button>
@@ -122,7 +123,8 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
     <>
       <div
         ref={cardRef}
-        className="rounded overflow-hidden shadow-xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white-600 group"
+        className="product-card shadow bg-gray-50 rounded overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+
       >
         {/* Image Container */}
         <div className="relative h-64  overflow-hidden">
@@ -133,9 +135,10 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-contain p-6 drop-shadow-2xl group-hover:scale-110 transition-transform duration-300"
+              className="w-full h-full object-cover  drop-shadow-2xl group-hover:scale-110 transition-transform duration-300 rounded"
             />
           </Link>
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           {/* Discount Badge */}
           {discount > 0 && (
@@ -148,9 +151,46 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
           )}
 
           {/* Wishlist Heart */}
-          <button className="absolute top-4 left-4 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur transition">
-            <Heart size={16} />
+          <button className="absolute top-4 left-4 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur transition"
+
+            style={{ background: color.primary }}>
+            <Heart size={16}
+              style={{ color: color.secondary }}
+            />
           </button>
+
+
+          <div className="quick-actions flex items-center justify-center gap-3">
+            {/* View Button */}
+
+            <button
+              className="w-10 h-10 rounded-full bg-white/90 backdrop-blur
+               flex items-center justify-center
+               shadow-md
+               transition-all duration-300
+               hover:bg-[var(--hover-bg)] hover:text-[var(--hover-text)] hover:scale-110"
+
+              style={{ ['--hover-bg' as any]: color.primary, ['--hover-text' as any]: color.primaryText, }}
+            >
+              <Link href={`/product/${product.id}`} >
+                <Eye className="w-5 h-5" />
+              </Link>
+            </button>
+
+            {/* Add to Cart Button */}
+            <button
+              className="h-10 px-5 rounded-full bg-primary text-white
+               text-sm font-semibold
+               flex items-center justify-center gap-2
+               shadow-md
+               hover:scale-105 hover:shadow-lg"
+              style={{ background: color.primary, color: color.primaryText }}
+              onClick={handleAddToCart}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Add to Cart
+            </button>
+          </div>
         </div>
 
         {/* Content Container */}
@@ -158,21 +198,52 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
           className="p-5  flex flex-col justify-between "
           style={{ background: color.secondary, color: color.secondaryText, height: 'calc(100% - 16rem)' }}
         >
+          <div className="flex items-center gap-2">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-3.5 h-3.5 ${i < Math.floor(product.rating || 4)
+                    ? "fill-amber-400 text-amber-400"
+                    : "fill-gray-300 text-gray-300"
+                    }`}
+                />
+              ))}
+            </div>
+            <span className="text-xs text-gray-500">
+              ({product.reviewCount || 0})
+            </span>
+          </div>
           {/* Title */}
           <h3 className="mb-1 line-clamp-3 font-semibold">
-            <Link href={`/product/${product.id}`} className="hover:text-pink-600">{product.name}</Link>
+
+          </h3>
+          <h3 className="font-semibold line-clamp-2 group-hover:text-primary transition-colors duration-300">
+            <Link href={`/product/${product.id}`} className="hover:text-blue-500">{product.name}</Link>
           </h3>
 
-          {/* Price Section */}
-          <div className="flex items-baseline gap-2 mb-4">
-            <span className="text-2xl font-bold"
-              style={{ color: color.secondary }}
-            >
-              ${product.offerPrice || product.price}
-            </span>
-            {product.offerPrice && (
-              <span className="text-lg text-gray-500 line-through">
-                ${product.price}
+
+          {/* Price */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold"
+               style={{color:color.primary}}
+              >
+                ৳{product.offerPrice || product.price} 
+              </span>
+
+              {product.offerPrice && (
+                <span className="text-sm text-gray-400 line-through"
+               
+                >
+                  ৳{product.price}
+                </span>
+              )}
+            </div>
+
+            {discount > 0 && (
+              <span className="discount-badge text-xs font-bold">
+                -{discount}%
               </span>
             )}
           </div>
@@ -195,7 +266,7 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
           )}
 
           {/* Buttons */}
-          <div className="flex gap-1">
+          {/* <div className="flex gap-1">
             <button
               onClick={() => setIsBuyModalOpen(true)}
               className="flex-1 py-2  shadow-md hover:shadow-xl transition"
@@ -210,12 +281,12 @@ export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
               onClick={handleAddToCart}
               className="flex-1 py-2  shadow-md hover:shadow-xl transition"
               style={{
-               background: color.buttonBg, color: color.buttonText
+                background: color.buttonBg, color: color.buttonText
               }}
             >
               Cart
             </button>
-          </div>
+          </div> */}
 
         </div>
       </div>

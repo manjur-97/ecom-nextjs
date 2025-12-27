@@ -9,7 +9,7 @@ import DynamicProductSection from "@/components/ui/DynamicProductSection";
 export default function Home() {
   const products = useSelector((state: RootState) => state.products.items);
   return (
-    <main className="container mx-auto py-6 px-2">
+    <main className="container mx-auto py-3 px-2">
       <section>
         <Category />
       </section>
@@ -18,25 +18,25 @@ export default function Home() {
           banners={[
             {
               id: "1",
-              image: "/banner1.jpg",
-              title: "Summer Sale",
+              image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&h=500&fit=crop",
+              title: "Winter Flash Sale",
               description: "Up to 50% off on all products",
               link: "/sale",
               linkText: "Shop Now"
             },
             {
-              id: "1",
-              image: "/banner1.jpg",
-              title: "Summer Sale",
-              description: "Up to 50% off on all products",
+              id: "2",
+              image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1400&h=500&fit=crop",
+              title: "Watch For Every One",
+              description: "Up to 10% off on all products",
               link: "/sale",
               linkText: "Shop Now"
             },
             {
-              id: "1",
-              image: "/banner1.jpg",
-              title: "Summer Sale",
-              description: "Up to 50% off on all products",
+              id: "3",
+              image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1400&h=500&fit=crop",
+              title: "Flash Sale For Man",
+              description: "Buy 2 Get 1 Free",
               link: "/sale",
               linkText: "Shop Now"
             },
@@ -47,19 +47,22 @@ export default function Home() {
           autoPlayInterval={3000}
         />
       </section>
-      <DynamicProductSection
-        title="Campaign"
-        columns={4}
-        viewMoreLink="/campaigns"
-        products={products}
-      />
+      <div className="flex flex-col md:flex-row gap-3">
+        <DynamicProductSection
+          title="Campaign"
+          columns={3}
+          viewMoreLink="/campaigns"
+          products={products}
+        />
 
-      <DynamicProductSection
-        title="Pre Order"
-        columns={6}
-        products={products}
-      />
-      <section className="w-full py-4 bg-white my-3">
+        <DynamicProductSection
+          title="Pre Order"
+          columns={3}
+          products={products}
+        />
+      </div>
+
+      <section className="w-full py-3 bg-white my-3">
         <div className="max-w-full mx-auto px-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-2xl font-bold text-gray-900">Just For You</h2>
