@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "../../components/ui/ProductCard";
 import { RootState } from "../../redux/store";
 
@@ -27,6 +28,9 @@ const COLORS = ["#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF", "#A66CFF", "#FFB4B4"
 
 export default function ListingPage() {
   const products = useSelector((state: RootState) => state.products.items);
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+
   // Filter state
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
@@ -34,22 +38,45 @@ export default function ListingPage() {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
 
-  // Filter logic (simple demo)
+  // Filter logic
   const filteredProducts = products.filter((p) => {
     let pass = true;
-    if (selectedSubcategories.length > 0) {
-      pass = selectedSubcategories.some(sub => p.name.toLowerCase().includes(sub.toLowerCase()));
+
+    // Search query filter - any word matching
+    if (searchQuery.trim()) {
+      const queryWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(word => word.length > 0);
+      const productName = p.name?.toLowerCase() || "";
+      const productDescription = p.description?.toLowerCase() || "";
+      
+      // Check if ANY word from search query matches product name or description
+      const hasMatch = queryWords.some(word => 
+        productName.includes(word) || productDescription.includes(word)
+      );
+      
+      pass = pass && hasMatch;
     }
+
+    // Category filter
+    if (selectedSubcategories.length > 0) {
+      pass = pass && selectedSubcategories.some(sub => p.name.toLowerCase().includes(sub.toLowerCase()));
+    }
+    
+    // Size filter
     if (selectedSizes.length > 0 && p.sizes) {
       pass = pass && selectedSizes.some(size => p.sizes?.includes(size));
     }
+    
+    // Color filter
     if (selectedColors.length > 0) {
       // No color in product data, skip for now
       pass = pass;
     }
+    
+    // Rating filter
     if (selectedRating) {
       pass = pass && (p.rating || 0) >= selectedRating;
     }
+    
     return pass;
   });
 
@@ -172,11 +199,19 @@ export default function ListingPage() {
       <main className="flex-1 bg-white rounded shadow p-6">
         {/* Breadcrumbs and Sort */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-          <nav className="text-sm text-gray-400 flex items-center gap-1">
-            <span>Home</span>
-            <span className="mx-1">/</span>
-            <span className="text-black font-medium">Products</span>
-          </nav>
+          <div className="flex flex-col gap-2">
+            <nav className="text-sm text-gray-400 flex items-center gap-1">
+              <span>Home</span>
+              <span className="mx-1">/</span>
+              <span className="text-black font-medium">Products</span>
+            </nav>
+            {searchQuery && (
+              <div className="text-sm text-gray-600">
+                Search results for: <span className="font-semibold text-gray-900">"{searchQuery}"</span>
+                <span className="ml-2 text-gray-500">({filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'})</span>
+              </div>
+            )}
+          </div>
           <div>
             <label className="mr-2 text-sm font-medium">Sort By</label>
             <select className="border rounded px-2 py-1 text-sm">

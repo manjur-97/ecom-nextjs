@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { logout } from "../features/user/userSlice";
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { color } from '../components/ui/theme/Color'
 // Lucide icons
 import {
@@ -21,9 +22,56 @@ export default function Navbar() {
   const categories = useSelector((state: RootState) => state.categories.items);
   const username = useSelector((state: RootState) => state.user.username);
   const dispatch = useDispatch();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mobileSearchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   let profileMenuTimeout: NodeJS.Timeout | null = null;
+
+  const handleSearch = useCallback((query: string) => {
+    if (query.trim()) {
+      router.push(`/listing?search=${encodeURIComponent(query.trim())}`);
+    } else {
+      router.push(`/listing`);
+    }
+  }, [router]);
+
+  // Desktop search debounce
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      handleSearch(searchQuery);
+    }, 1000);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, handleSearch]);
+
+  // Mobile search debounce
+  useEffect(() => {
+    if (mobileSearchTimeoutRef.current) {
+      clearTimeout(mobileSearchTimeoutRef.current);
+    }
+
+    mobileSearchTimeoutRef.current = setTimeout(() => {
+      handleSearch(mobileSearchQuery);
+    }, 1000);
+
+    return () => {
+      if (mobileSearchTimeoutRef.current) {
+        clearTimeout(mobileSearchTimeoutRef.current);
+      }
+    };
+  }, [mobileSearchQuery, handleSearch]);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -50,11 +98,7 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex flex-col items-start shrink-0 group">
-              {/* <span
-                className="text-xl md:text-2xl font-bold italic"
-                style={{ color: color.primary }}>
-                Hello Bangla
-              </span> */}
+
               <img className="w-[100px] " src="logo-1.png" alt="Logo" />
 
             </Link>
@@ -66,7 +110,9 @@ export default function Navbar() {
                 <input
                   type="search"
                   placeholder="Search for Products, Brands and More"
-                  className="w-full pl-10 h-9 border-none rounded-sm text-sm placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 h-9 border-none rounded-sm text-sm placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
                   style={{ background: color.secondary, color: color.secondaryText }}
                 />
               </div>
@@ -170,7 +216,9 @@ export default function Navbar() {
           <input
             type="search"
             placeholder="Search for Products, Brands and More"
-            className="w-full pl-10 h-8 border-none rounded-sm text-sm  focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+            value={mobileSearchQuery}
+            onChange={(e) => setMobileSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 h-8 border-none rounded-sm text-sm  focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
             style={{ background: color.secondary, color: color.secondaryText }}
           />
         </div>
