@@ -46,7 +46,7 @@ export default function CartPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-xl font-bold text-gray-800">Your Cart</h1>
@@ -62,7 +62,7 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded shadow  overflow-hidden">
               <div className="divide-y divide-gray-200">
                 {cartItems.map((item) => {
                   const itemPrice = item.offerPrice || item.price;
@@ -95,12 +95,12 @@ export default function CartPage() {
                         {/* Price Section */}
                         <div className="flex items-center gap-2 mb-3">
                           <span className="text-xl font-bold text-gray-700">
-                            ${itemPrice.toFixed(2)}
+                            ৳{itemPrice.toFixed(2)}
                           </span>
                           {item.offerPrice && (
                             <>
                               <span className="text-lg text-gray-400 line-through">
-                                ${item.price}
+                                ৳{item.price}
                               </span>
                               <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm font-semibold">
                                 {discount}% OFF
@@ -164,7 +164,7 @@ export default function CartPage() {
                       <div className="text-right">
                         <div className="text-sm text-gray-600 mb-2">Total</div>
                         <div className="text-xl font-bold text-gray-700">
-                          ${(itemPrice * item.quantity).toFixed(2)}
+                          ৳{(itemPrice * item.quantity).toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -176,19 +176,19 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
+            <div className="bg-white rounded shadow p-6 sticky top-20">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
 
               <div className="space-y-3 mb-6 border-b border-gray-200 pb-6">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal ({cartItems.reduce((a, b) => a + b.quantity, 0)} items)</span>
-                  <span className="font-semibold">${regularTotal.toFixed(2)}</span>
+                  <span className="font-semibold">৳{regularTotal.toFixed(2)}</span>
                 </div>
 
                 {savings > 0 && (
                   <div className="flex justify-between text-green-700 font-semibold">
                     <span>You Save</span>
-                    <span>-${savings.toFixed(2)}</span>
+                    <span>৳{savings.toFixed(2)}</span>
                   </div>
                 )}
 
@@ -200,12 +200,12 @@ export default function CartPage() {
 
               <div className="flex justify-between items-center mb-6 text-lg font-bold text-gray-900">
                 <span>Total Amount</span>
-                <span>${total.toFixed(2)}</span>
+                <span>৳{total.toFixed(2)}</span>
               </div>
 
               <button
                 onClick={() => router.push("/checkout")}
-                className="w-full bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-2 rounded-lg transition shadow mb-3"
+                className="w-full bg-linear-to-r from-gray-500 to-gray-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 rounded transition shadow mb-3"
               >
                 Checkout ({cartItems.reduce((a, b) => a + b.quantity, 0)})
               </button>

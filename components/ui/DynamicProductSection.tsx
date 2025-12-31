@@ -90,9 +90,9 @@ export default function DynamicProductSection({
   const gridClass = gridColsMap[columns] || gridColsMap[4];
 
   return (
-    <section className="w-full py-4 bg-white my-3">
+    <section className="w-full sh py-4 bg-white">
       <div className="max-w-full mx-auto px-4">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold"
             style={{ color: color.primary }}
           >{title}</h2>
@@ -105,15 +105,14 @@ export default function DynamicProductSection({
             <span className="text-xl">›</span>
           </Link>
         </div>
-        <hr className="mb-4" />
 
 
         {/* Products Grid */}
         <div className={`grid ${gridClass} ${gap}`}>
-          {products.slice(0, 6).map((product) => (
+          {products.map((product) => (
             <div
               key={product.id}
-              className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+              className="bg-gray-50 rounded shadow overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
             >
               <Link href={`/product/${product.id}`} className="w-full h-full block">
                 {/* Product Image */}

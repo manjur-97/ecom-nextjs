@@ -18,6 +18,7 @@ import {
 
 export default function Navbar() {
   const cartCount = useSelector((state: RootState) => state.cart.items.length);
+  const categories = useSelector((state: RootState) => state.categories.items);
   const username = useSelector((state: RootState) => state.user.username);
   const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,11 +50,12 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex flex-col items-start shrink-0 group">
-              <span
+              {/* <span
                 className="text-xl md:text-2xl font-bold italic"
                 style={{ color: color.primary }}>
                 Hello Bangla
-              </span>
+              </span> */}
+              <img className="w-[100px] " src="logo-1.png" alt="Logo" />
 
             </Link>
 
@@ -102,7 +104,7 @@ export default function Navbar() {
 
               {/* Login/Profile */}
               <div
-                className="hidden md:flex items-center gap-1 px-4 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative group"
+                className=" md:flex items-center gap-1 px-4 py-2 font-medium hover:bg-[var(--hover-bg)] rounded transition-colors relative group"
                 onMouseEnter={() => {
                   if (profileMenuTimeout) clearTimeout(profileMenuTimeout);
                   setShowProfileMenu(true);
@@ -113,7 +115,7 @@ export default function Navbar() {
                 style={{ background: color.secondary, color: color.secondaryText, ['--hover-bg' as any]: color.hoverBg }}
               >
                 <User size={18} />
-                <ChevronDown size={16} />
+                <ChevronDown className="hidden  md:flex" size={16} />
                 {/* Dropdown */}
                 {showProfileMenu && (
                   <div
@@ -129,22 +131,22 @@ export default function Navbar() {
                   >
                     {!username ? (
                       <>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/login"
-                          style={{ color: color.secondaryText, ['--hover-bg' as any]: color.primary }}
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]  hover:text-white" href="/login"
+                          style={{ ['--hover-bg' as any]: color.primary }}
                         >Login</Link>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/register"
-                          style={{ color: color.secondaryText, ['--hover-bg' as any]: color.primary }}
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="/register"
+                          style={{ ['--hover-bg' as any]: color.primary }}
                         >Register</Link>
                       </>
                     ) : (
                       <>
-                        <span className="block px-4 py-2 font-semibold "
-                          style={{ color: color.primaryText }}
+                        <span className="block px-4 py-2 font-semibold text-gray-600"
+                          style={{ color: color.primary }}
                         > Hello, {username}</span>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="/account"
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="/account"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Profile</Link>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)]" href="account/change-password"
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="account/change-password"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Change Password</Link>
                         <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => dispatch(logout())}>Logout</button>
@@ -178,47 +180,29 @@ export default function Navbar() {
       <div
         className={`lg:hidden fixed inset-0 top-22 z-50 transition-all duration-300 ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
           }`}
-        style={{ background: color.background }}
+        style={{ background: color.secondary }}
       >
-        <div className="container mx-auto px-4 py-4 h-full overflow-y-auto">
-          {/* Mobile login/profile area */}
-          <div
-            className="flex items-center gap-3 p-4 rounded-lg mb-4"
-            style={{ background: color.primary, color: color.primaryText }}
-          >
-            <User size={24} style={{ color: color.primaryText }} />
-            <div>
-              <p className="font-medium">{username ? `Hello, ${username}` : 'Login & Signup'}</p>
-              <p className="text-sm"
-                style={{ color: color.secondaryText }}
-              >Manage orders, wishlist</p>
-            </div>
-          </div>
-          {/* Mobile menu links */}
+        <div className=" mx-auto px-4 py-4 h-full overflow-y-auto">
+
+          {/* Mobile category wise subcategory menu links */}
           <div className="flex flex-col gap-2">
-            {!username ? (
-              <>
-                <Link href="/login" className="block px-4 py-2 rounded hover:bg-[var(--hover-bg)] font-medium"
-                  onClick={() => { setIsMenuOpen(false) }}
-                  style={{ ['--hover-bg' as any]: color.primary, color: color.primaryText, background: color.secondary }}
-                >Login</Link>
-                <Link href="/register" className={`block px-4 py-2 rounded hover:bg-[var(--hover-bg)] font-medium`}
-                  onClick={() => { setIsMenuOpen(false) }}
-                  style={{ color: color.primaryText, background: color.secondary, ['--hover-bg' as any]: color.primary }}
-                >Register</Link>
-              </>
-            ) : (
-              <>
-                <Link href="/seller-dashboard" className="block px-4 py-2 rounded font-medium"
-                  style={{ color: color.secondaryText, background: color.secondary }}
-                >Dashboard</Link>
-                <Link href="/profile"
-                  className="block px-4 py-2 rounded font-medium"
-                  style={{ color: color.secondaryText, background: color.secondary }}
-                  onClick={() => { setIsMenuOpen(false) }}>Settings</Link>
-                <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700 font-medium" onClick={() => { dispatch(logout()); setIsMenuOpen(false); }}>Logout</button>
-              </>
-            )}
+            <div className="relative flex w-[320px] bg-white  rounded shadow">
+              {/* LEFT: Category List */}
+              <ul className="w-[320px]">
+                {categories.map((category) => (
+                  <li
+                    key={category.id}
+
+                    className="w-fill px-4 py-3 cursor-pointer hover:bg-gray-100 flex justify-between items-center"
+                  >
+                    <span className="font-medium">{category.name}</span>
+                    {category.hasDropdown && <span>›</span>}
+                  </li>
+                ))}
+              </ul>
+
+
+            </div>
 
           </div>
         </div>

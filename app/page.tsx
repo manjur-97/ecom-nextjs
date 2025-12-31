@@ -5,15 +5,18 @@ import { RootState } from "../redux/store";
 import Category from "@/components/ui/Category";
 import SliderFullScreenBanner from "@/components/ui/SliderFullScreenBanner";
 import DynamicProductSection from "@/components/ui/DynamicProductSection";
+import Ads from "@/components/ui/Ads";
 
 export default function Home() {
   const products = useSelector((state: RootState) => state.products.items);
   return (
+    <>
     <main className="container mx-auto py-3 px-2">
+   
       <section>
         <Category />
       </section>
-      <section>
+      <section className="my-3">
         <SliderFullScreenBanner
           banners={[
             {
@@ -47,20 +50,46 @@ export default function Home() {
           autoPlayInterval={3000}
         />
       </section>
-      <div className="flex flex-col md:flex-row gap-3">
+      <div className="flex flex-col md:flex-row my-3 gap-3">
         <DynamicProductSection
           title="Campaign"
           columns={3}
           viewMoreLink="/campaigns"
-          products={products}
+          products={products.slice(0, 3)}
         />
 
         <DynamicProductSection
           title="Pre Order"
           columns={3}
-          products={products}
+          products={products.slice(0, 3)}
         />
       </div>
+
+      <div className="grid grid-cols-12 gap-3 items-start justify-center items-center">
+
+
+        {/* Product Section → 9 columns */}
+        <div className="col-span-12 md:col-span-9">
+          <DynamicProductSection
+            title="Flash Sale"
+            columns={4}
+            viewMoreLink="/campaigns"
+            products={products.slice(0, 4)}
+          />
+        </div>
+        {/* Ads → 3 columns */}
+        <div className="col-span-12 md:col-span-3 flex h-full justify-center items-center">
+          <Ads
+            // width="300px"
+            // height="300px"
+            image="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&h=600&q=80"
+            link="#"
+            badge="Ads"
+          />
+        </div>
+
+      </div>
+
 
       <section className="w-full py-3 bg-white my-3">
         <div className="max-w-full mx-auto px-4">
@@ -79,8 +108,8 @@ export default function Home() {
         </div>
       </section>
 
-
     </main>
+    </>
   );
 }
 

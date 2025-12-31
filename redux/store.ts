@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import cartReducer from '../features/cart/cartSlice';
 import productsReducer from '../features/products/productsSlice';
+import categoriesReducer from "../features/products/categoriesSlice";
 import userReducer from '../features/user/userSlice';
 import ordersReducer from '../features/orders/ordersSlice';
 
@@ -11,6 +12,7 @@ export const store = configureStore({
   reducer: {
     cart: cartReducer,
     products: productsReducer,
+    categories: categoriesReducer,
     user: userReducer,
     orders: ordersReducer,
   },
