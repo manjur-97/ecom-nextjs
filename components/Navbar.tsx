@@ -27,51 +27,50 @@ export default function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const mobileSearchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   let profileMenuTimeout: NodeJS.Timeout | null = null;
 
   const handleSearch = useCallback((query: string) => {
+
     if (query.trim()) {
       router.push(`/listing?search=${encodeURIComponent(query.trim())}`);
-    } else {
-      router.push(`/listing`);
+    }else {
+      router.push(`/`);
     }
   }, [router]);
 
-  // Desktop search debounce
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
+  // // Desktop search debounce
+  // useEffect(() => {
+  //   if (searchTimeoutRef.current) {
+  //     clearTimeout(searchTimeoutRef.current);
+  //   }
 
-    searchTimeoutRef.current = setTimeout(() => {
-      handleSearch(searchQuery);
-    }, 1000);
+  //   searchTimeoutRef.current = setTimeout(() => {
+  //     handleSearch(searchQuery);
+  //   }, 1000);
 
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchQuery, handleSearch]);
+  //   return () => {
+  //     if (searchTimeoutRef.current) {
+  //       clearTimeout(searchTimeoutRef.current);
+  //     }
+  //   };
+  // }, [searchQuery, handleSearch]);
 
-  // Mobile search debounce
-  useEffect(() => {
-    if (mobileSearchTimeoutRef.current) {
-      clearTimeout(mobileSearchTimeoutRef.current);
-    }
+  // // Mobile search debounce
+  // useEffect(() => {
+  //   if (mobileSearchTimeoutRef.current) {
+  //     clearTimeout(mobileSearchTimeoutRef.current);
+  //   }
 
-    mobileSearchTimeoutRef.current = setTimeout(() => {
-      handleSearch(mobileSearchQuery);
-    }, 1000);
+  //   mobileSearchTimeoutRef.current = setTimeout(() => {
+  //     handleSearch(mobileSearchQuery);
+  //   }, 1000);
 
-    return () => {
-      if (mobileSearchTimeoutRef.current) {
-        clearTimeout(mobileSearchTimeoutRef.current);
-      }
-    };
-  }, [mobileSearchQuery, handleSearch]);
+  //   return () => {
+  //     if (mobileSearchTimeoutRef.current) {
+  //       clearTimeout(mobileSearchTimeoutRef.current);
+  //     }
+  //   };
+  // }, [mobileSearchQuery, handleSearch]);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -106,7 +105,7 @@ export default function Navbar() {
             {/* Search bar (desktop) */}
             <div className="flex-1 max-w-2xl mx-auto hidden md:block">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2" size={20} />
+
                 <input
                   type="search"
                   placeholder="Search for Products, Brands and More"
@@ -115,6 +114,9 @@ export default function Navbar() {
                   className="w-full pl-10 pr-4 h-9 border-none rounded-sm text-sm placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
                   style={{ background: color.secondary, color: color.secondaryText }}
                 />
+                <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-green-700 text-white px-4 py-1 rounded-sm text-sm font-medium hover:bg-green-600"
+                  onClick={() => handleSearch(searchQuery)}
+                ><Search size={20} /></button>
               </div>
             </div>
 
@@ -221,6 +223,9 @@ export default function Navbar() {
             className="w-full pl-10 pr-4 h-8 border-none rounded-sm text-sm  focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
             style={{ background: color.secondary, color: color.secondaryText }}
           />
+          <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-green-700 text-white px-4 py-1 rounded-sm text-sm font-medium hover:bg-green-600"
+            onClick={() => handleSearch(searchQuery)}
+          ><Search size={20} /></button>
         </div>
       </div>
 

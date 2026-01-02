@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { color } from "./theme/Color";
+import Link from "next/link";
 
 
 function Category() {
@@ -198,7 +199,9 @@ function Category() {
                     className="w-20 h-20 bg-linear-to-br rounded-lg flex items-center justify-center text-3xl shadow-sm group-hover:shadow-md group-hover:scale-95 transition-all duration-200"
                     style={{ background: color.gradient }}
                   >
-                    {category.icon}
+                    <Link href={`/listing?category=${encodeURIComponent(category.name)}`}>
+                      {category.icon}
+                    </Link>
                   </div>
                   {/* Subcategory Dropdown */}
                   {category.hasDropdown && openDropdown === category.id && dropdownPosMap[category.id] && (

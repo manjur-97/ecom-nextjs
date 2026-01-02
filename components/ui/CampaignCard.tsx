@@ -1,83 +1,122 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import { Product } from "../../features/products/productsSlice";
+import Link from "next/link";
 
-type CampaignCardProps = {
-  title?: string;
-  subtitle?: string;
-  discount?: string;
-  image?: string;
-  endDate?: string | Date;
-  className?: string;
+import { color } from "./theme/Color";
+import { Clock } from "lucide-react";
+type Props = {
+  product: Product;
 };
 
-function getRemaining(end: Date) {
-  const total = Math.max(0, Math.floor((end.getTime() - Date.now()) / 1000));
-  const days = Math.floor(total / 86400);
-  const hours = Math.floor((total % 86400) / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  const seconds = total % 60;
-  return { days, hours, minutes, seconds };
-}
-
-export default function CampaignCard({
-  title = "SOUND AND MUSIC",
-  subtitle = "30% OFF",
-  discount = "30% OFF",
-  image = "/campaign-default.jpg",
-  endDate,
-  className = "",
-}: CampaignCardProps) {
-  const end = useMemo(() => {
-    if (endDate) return new Date(endDate);
-    return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  }, [endDate]);
-
-  const [time, setTime] = useState(() => getRemaining(end));
+function CountdownTimer({ expiresAt }: { expiresAt?: Date | string }) {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 1,
+    hours: 1,
+    minutes: 1,
+    seconds: 1,
+  });
 
   useEffect(() => {
-    const id = setInterval(() => setTime(getRemaining(end)), 1000);
-    return () => clearInterval(id);
-  }, [end]);
+    if (!expiresAt) return;
 
-  const fmt = (n: number) => String(n).padStart(2, "0");
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const target = new Date(expiresAt).getTime();
+      const distance = target - now;
+
+      if (distance < 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((distance / 1000 / 60) % 60),
+        seconds: Math.floor((distance / 1000) % 60),
+      });
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, [expiresAt]);
+
+  if (!expiresAt) return null;
 
   return (
-    <div className={`w-full max-w-xs rounded-lg bg-white shadow-md overflow-hidden ${className}`}>
-      <div className="relative h-56 bg-gray-100">
-        <img src={image} alt={title} className="object-cover w-full h-56" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-      </div>
-
-      <div className="p-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <div className="text-xs text-slate-500 uppercase">{title}</div>
-            <div className="text-2xl font-semibold text-sky-600 mt-1">{subtitle}</div>
-          </div>
-
-          <button
-            aria-label="open"
-            className="h-8 w-8 flex items-center justify-center rounded-full bg-white shadow border border-slate-200"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 12h14" stroke="#0f172a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M13 6l6 6-6 6" stroke="#0f172a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="mt-4 flex items-center gap-3">
-          <div className="text-sm text-slate-600">{discount}</div>
-          <div className="ml-auto flex gap-2">
-            <div className="flex items-center gap-2">
-              <div className="bg-slate-800 text-white rounded-md px-3 py-2 text-sm shadow-sm">{fmt(time.days)}d</div>
-              <div className="bg-slate-800 text-white rounded-md px-3 py-2 text-sm shadow-sm">{fmt(time.hours)}h</div>
-              <div className="bg-slate-800 text-white rounded-md px-3 py-2 text-sm shadow-sm">{fmt(time.minutes)}m</div>
-              <div className="bg-slate-800 text-white rounded-md px-3 py-2 text-sm shadow-sm">{fmt(time.seconds)}s</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex gap-1 text-xs font-bold bg-white/60 text-white py-1 px-2 rounded justify-center items-center" >
+      <Clock className="w-3.5 h-3.5 " style={{color:color.primary}}/>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.days).padStart(2, "0")}d</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.hours).padStart(2, "0")}h</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.minutes).padStart(2, "0")}m</span>
+      <span className="px-1.5 py-1.2 rounded text-sm" style={{ background: color.primary, color: color.primaryText }}>{String(timeLeft.seconds).padStart(2, "0")}s</span>
     </div>
   );
 }
+
+export default function CampaignCard({ product }: Props) {
+  return (
+    <div
+      key={product.id}
+      className="bg-gray-50 rounded shadow overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+    >
+      <Link href={`/product/${product.id}`} className="w-full h-full block">
+        {/* Product Image */}
+        <div className="relative bg-gray-200 aspect-square overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          />
+
+          {product.badge && (
+            <div
+              className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full ${product.badgeColor || "bg-red-600"
+                }`}
+            >
+              {product.badge}
+            </div>
+          )}
+
+
+          <div className="absolute bottom-2 left-2 right-2">
+
+            <CountdownTimer expiresAt="2026-01-05" />
+          </div>
+        </div>
+
+        {/* Product Info */}
+        <div className="p-3">
+          <h3 className="text-sm  font-semibold text-gray-800 mb-2 hover:text-[var(--hover-text)]"
+            style={{ ['--hover-text' as any]: color.primary, }}
+          >
+            {product.name}
+          </h3>
+
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-lg font-bold text-gray-700"
+
+            >
+              ৳{product.price.toFixed(0)}
+            </span>
+            {product.price && (
+              <span className="text-sm text-gray-500 line-through">
+                ৳{product.price.toFixed(0)}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between text-xs">
+            {product.discount && (
+              <span className="text-red-600 font-bold">
+                {product.discount}% OFF
+              </span>
+            )}
+            <span className="text-yellow-500">⭐ ⭐⭐ ⭐</span>
+          </div>
+        </div>
+      </Link>
+    </div>
+ )}

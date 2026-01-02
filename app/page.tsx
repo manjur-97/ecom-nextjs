@@ -23,16 +23,16 @@ export default function Home() {
               id: "1",
               image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1400&h=500&fit=crop",
               title: "Winter Flash Sale",
-              description: "Up to 50% off on all products",
-              link: "/sale",
+              description: "Up to 50% off on all winter collections",
+              link: "/listing/offer?offerCategory=Winter%20Flash%20Sale",
               linkText: "Shop Now"
             },
             {
               id: "2",
               image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1400&h=500&fit=crop",
               title: "Watch For Every One",
-              description: "Up to 10% off on all products",
-              link: "/sale",
+              description: "Up to 10% off on all watches",
+              link: "/listing/offer?offerCategory=Watch For Every One",
               linkText: "Shop Now"
             },
             {
@@ -40,7 +40,7 @@ export default function Home() {
               image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1400&h=500&fit=crop",
               title: "Flash Sale For Man",
               description: "Buy 2 Get 1 Free",
-              link: "/sale",
+              link: "/listing/offer?offerCategory=Flash Sale For Man",
               linkText: "Shop Now"
             },
 
@@ -54,13 +54,14 @@ export default function Home() {
         <DynamicProductSection
           title="Campaign"
           columns={3}
-          viewMoreLink="/campaigns"
+          viewMoreLink="/listing/offer?offerCategory=Campaign"
           products={products.slice(0, 3)}
         />
 
         <DynamicProductSection
           title="Pre Order"
           columns={3}
+          viewMoreLink="/listing/offer?offerCategory=Pre Order"
           products={products.slice(0, 3)}
         />
       </div>
@@ -73,7 +74,7 @@ export default function Home() {
           <DynamicProductSection
             title="Flash Sale"
             columns={4}
-            viewMoreLink="/campaigns"
+            viewMoreLink="/listing/offer?offerCategory=Flash Sale"
             products={products.slice(0, 4)}
           />
         </div>
@@ -83,7 +84,7 @@ export default function Home() {
             // width="300px"
             // height="300px"
             image="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&h=600&q=80"
-            link="#"
+            link="/listing/offer?offerCategory=Special Offers"
             badge="Ads"
           />
         </div>

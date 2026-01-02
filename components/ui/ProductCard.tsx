@@ -18,9 +18,7 @@ type Props = {
 export default function ProductCard({ product, accent = "#ff4da6" }: Props) {
   const dispatch = useAppDispatch();
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const cartCount = useAppSelector((state) => state.cart.items.length);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     const button = e.currentTarget as HTMLElement;
