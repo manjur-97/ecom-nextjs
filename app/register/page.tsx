@@ -1,64 +1,68 @@
 "use client";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { login, logout } from "../../features/user/userSlice";
+import { login } from "../../features/user/userSlice";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { color } from "@/components/ui/theme/Color";
-import { User, Lock, LogIn, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
-import { Facebook, Github } from "lucide-react";
+import { User, Phone, LogIn, CheckCircle2, XCircle } from "lucide-react";
 
-export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const user = localStorage.getItem("userAuth");
-    return !!user;
-  });
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  function handleLogin(e: React.FormEvent) {
+  function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!username) {
-      setError("Username is required.");
+    
+    if (!name.trim()) {
+      setError("Name is required.");
       return;
     }
-    if (!password) {
-      setError("Password is required.");
+    
+    if (!mobileNumber.trim()) {
+      setError("Mobile number is required.");
       return;
     }
-    if (password.length < 1 || password.length > 8) {
-      setError("Password must be 1 to 8 characters.");
+    
+    // Basic mobile number validation (Bangladesh format)
+    const mobileRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
+    const cleanMobile = mobileNumber.replace(/\s+/g, '');
+    
+    if (!mobileRegex.test(cleanMobile)) {
+      setError("Please enter a valid mobile number (e.g., 01XXXXXXXXX)");
       return;
     }
-    localStorage.setItem("userAuth", JSON.stringify({ username, password }));
-    dispatch(login(username));
-    setIsAuthenticated(true);
-    router.push("/");
+    
+    // Store user data
+    const userData = {
+      name: name.trim(),
+      mobileNumber: cleanMobile,
+      username: name.trim().toLowerCase().replace(/\s+/g, '')
+    };
+    
+    localStorage.setItem("userAuth", JSON.stringify(userData));
+    dispatch(login(userData.username));
+    setSuccess(true);
+    
+    // Redirect after 1 second
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
   }
 
-  function handleLogout() {
-    localStorage.removeItem("userAuth");
-    dispatch(logout());
-    setIsAuthenticated(false);
-    setUsername("");
-    setPassword("");
-  }
-
-  function handleSocialLogin(provider: string) {
-    // Placeholder for social login functionality
-    console.log(`Login with ${provider}`);
+  function handleSocialRegister(provider: string) {
+    // Placeholder for social register functionality
+    console.log(`Register with ${provider}`);
     // In a real app, you would integrate with OAuth providers here
-    // For now, we'll just show an alert
-    alert(`${provider} login integration coming soon!`);
+    alert(`${provider} registration integration coming soon!`);
   }
 
-  if (isAuthenticated) {
-    const user = JSON.parse(localStorage.getItem("userAuth") || "{}");
+  if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: color.secondary }}>
         <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center animate-fade-in">
@@ -67,19 +71,11 @@ export default function LoginPage() {
               <CheckCircle2 size={48} style={{ color: color.primary }} />
             </div>
           </div>
-          <h2 className="text-2xl font-bold mb-2 text-gray-800">Welcome Back!</h2>
+          <h2 className="text-2xl font-bold mb-2 text-gray-800">Registration Successful!</h2>
           <p className="text-gray-600 mb-6">
-            You are logged in as <span className="font-semibold" style={{ color: color.primary }}>{user.username}</span>
+            Welcome <span className="font-semibold" style={{ color: color.primary }}>{name}</span>! 
+            Redirecting to home page...
           </p>
-          <button
-            onClick={handleLogout}
-            className="w-full py-3 px-6 rounded-lg text-white font-semibold transition-all transform hover:scale-105 hover:shadow-lg"
-            style={{ background: "#EF4444" }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "#DC2626"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "#EF4444"}
-          >
-            Logout
-          </button>
         </div>
       </div>
     );
@@ -88,13 +84,11 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center px-4 py-8" style={{ background: color.secondary }}>
       <div className="w-full max-w-5xl grid md:grid-cols-1 gap-6 items-center">
-
         <div className="w-full max-w-md mx-auto">
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 animate-fade-in">
             <div className="text-center mb-8">
-
-              <h1 className="text-3xl font-bold mb-2 text-gray-800">Sign In</h1>
-              <p className="text-gray-500 text-sm">Enter your credentials to access your account</p>
+              <h1 className="text-3xl font-bold mb-2 text-gray-800">Create Account</h1>
+              <p className="text-gray-500 text-sm">Enter your details to create a new account</p>
             </div>
 
             {error && (
@@ -104,11 +98,11 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-5">
-              {/* Username Field */}
+            <form onSubmit={handleRegister} className="space-y-5">
+              {/* Name Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
+                  Full Name
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -118,45 +112,42 @@ export default function LoginPage() {
                     type="text"
                     className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
                     style={{
-                      borderColor: error && !username ? "#EF4444" : "#D1D5DB"
+                      borderColor: error && !name ? "#EF4444" : "#D1D5DB"
                     }}
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    autoComplete="username"
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    autoComplete="name"
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
+              {/* Mobile Number Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
+                  Mobile Number
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock size={20} className="text-gray-400" />
+                    <Phone size={20} className="text-gray-400" />
                   </div>
                   <input
-                    type={showPassword ? "text" : "password"}
-                    className="w-full pl-12 pr-12 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
+                    type="tel"
+                    className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
                     style={{
-                      borderColor: error && !password ? "#EF4444" : "#D1D5DB"
+                      borderColor: error && !mobileNumber ? "#EF4444" : "#D1D5DB"
                     }}
-                    placeholder="Enter your password (1-8 chars)"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    autoComplete="current-password"
+                    placeholder="01XXXXXXXXX"
+                    value={mobileNumber}
+                    onChange={e => {
+                      // Allow only numbers and + for international format
+                      const value = e.target.value.replace(/[^\d+]/g, '');
+                      setMobileNumber(value);
+                    }}
+                    autoComplete="tel"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Password must be 1-8 characters</p>
+                <p className="text-xs text-gray-500 mt-1">Enter your 11-digit mobile number</p>
               </div>
 
               {/* Submit Button */}
@@ -168,7 +159,7 @@ export default function LoginPage() {
                 onMouseLeave={(e) => e.currentTarget.style.background = color.primary}
               >
                 <LogIn size={20} />
-                Sign In
+                Create Account
               </button>
             </form>
 
@@ -179,13 +170,12 @@ export default function LoginPage() {
               <div className="flex-1 border-t border-gray-300"></div>
             </div>
 
-            {/* Social Login Buttons */}
+            {/* Social Register Buttons */}
             <div className="space-y-3 mb-6">
-
-              {/* Google Login */}
+              {/* Google Register */}
               <button
                 type="button"
-                onClick={() => handleSocialLogin("Google")}
+                onClick={() => handleSocialRegister("Google")}
                 className="w-full py-3 px-4 rounded-lg border-2 border-gray-300 bg-white text-gray-700 font-medium transition-all transform hover:scale-105 hover:shadow-md flex items-center justify-center gap-3"
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = "#309A38";
@@ -213,24 +203,22 @@ export default function LoginPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                Continue with Google
+                Register with Google
               </button>
-
-
             </div>
 
-            {/* Register Link */}
+            {/* Login Link */}
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/register"
+                  href="/login"
                   className="font-semibold transition-colors hover:underline"
                   style={{ color: color.primary }}
                   onMouseEnter={(e) => e.currentTarget.style.color = color.hoverBg}
                   onMouseLeave={(e) => e.currentTarget.style.color = color.primary}
                 >
-                  Sign Up
+                  Sign In
                 </Link>
               </p>
             </div>

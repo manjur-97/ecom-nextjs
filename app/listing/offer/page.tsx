@@ -15,7 +15,7 @@ export default function ListingPage() {
 
 
   return (
-    <div className="container mx-auto flex gap-6 px-3 py-3 min-h-screen">
+    <div className="container mx-auto flex gap-3 px-3 py-3 min-h-screen">
 
       {/* Main Content */}
       <main className="flex-1 bg-white rounded shadow p-6">

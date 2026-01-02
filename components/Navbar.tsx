@@ -28,6 +28,10 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   let profileMenuTimeout: NodeJS.Timeout | null = null;
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const user = localStorage.getItem("userAuth");
+    return !!user;
+  });
 
   const handleSearch = useCallback((query: string) => {
 
@@ -37,6 +41,13 @@ export default function Navbar() {
       router.push(`/`);
     }
   }, [router]);
+
+  function handleLogout() {
+    localStorage.removeItem("userAuth");
+    dispatch(logout());
+    setIsAuthenticated(false);
+
+  }
 
   // // Desktop search debounce
   // useEffect(() => {
@@ -197,7 +208,7 @@ export default function Navbar() {
                         <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="account/change-password"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Change Password</Link>
-                        <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => dispatch(logout())}>Logout</button>
+                        <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => handleLogout()}>Logout</button>
                       </>
                     )}
                   </div>

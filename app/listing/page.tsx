@@ -81,7 +81,7 @@ export default function ListingPage() {
   });
 
   return (
-    <div className="container mx-auto flex gap-6 px-3 py-3 min-h-screen">
+    <div className="container mx-auto flex gap-3 px-3 py-3 min-h-screen">
       {/* Sidebar Filters */}
       <aside className="w-72 bg-white rounded shadow p-6 hidden lg:block sticky top-8 h-fit self-start">
         {/* Category & Subcategory */}

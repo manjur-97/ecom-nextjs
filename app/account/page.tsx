@@ -16,15 +16,15 @@ export default function AccountPage() {
   }
 
   return (
-    <main className="container mx-auto py-6 px-2">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <main className="container mx-auto py-3 px-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         {/* Sidebar */}
         <div className="md:col-span-1">
           <UserSidebar activeTab="/account" />
         </div>
 
         {/* Main Content */}
-        <div className="md:col-span-3 space-y-6">
+        <div className="md:col-span-3 space-y-3">
           <MyProfileSection />
           <AddressSection />
         </div>

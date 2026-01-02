@@ -142,10 +142,10 @@ export default function ProductDetailsClient({ id }: Props) {
     const related = products.filter((p) => p.id !== product.id).slice(0, 6);
 
     return (
-        <div className="container mx-auto py-8 px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="container mx-auto py-3 px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
                 <div className="lg:col-span-6">
-                    <div className="bg-white p-4 rounded shadow">
+                    <div className="bg-white p-4 rounded">
                         <div className="flex gap-4">
                             <div className="w-20 flex flex-col gap-2">
                                 {[product.image].map((img, idx) => (
@@ -166,7 +166,7 @@ export default function ProductDetailsClient({ id }: Props) {
                 </div>
 
                 <div className="lg:col-span-6">
-                    <div className="bg-white p-6 rounded shadow">
+                    <div className="bg-white p-6 rounded">
                         <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
                         <div className="mb-3 text-gray-600">SKU: {product.id}</div>
 
@@ -239,7 +239,7 @@ export default function ProductDetailsClient({ id }: Props) {
                 </div>
             </div>
 
-            <section className="mt-8">
+            <section className="mt-3 bg-white rounded p-4">
                 <h3 className="text-xl font-semibold mb-4">Best Related Product</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     {related.map((rp: Product) => (

@@ -10,27 +10,34 @@ const cols = [
   {
     title: "ABOUT",
     links: [
-      "Contact Us",
-      "About Us",
-      "Careers",
-      "Stories",
+      { name: "Contact Us", href: "/contact" },
+      { name: "About Us", href: "/about" },
+      { name: "Careers", href: "/careers" },
+      { name: "Stories", href: "/stories" },
     ],
   },
   
   {
     title: "HELP",
-    links: ["Payments", "Shipping", "Cancellation & Returns", "FAQ"],
+    links: [
+      { name: "Payments", href: "/payments" },
+      { name: "Shipping", href: "/shipping" },
+      { name: "Cancellation & Returns", href: "/returns" },
+      { name: "FAQ", href: "/faq" }
+    ],
   },
   {
     title: "CONSUMER POLICY",
     links: [
-      "Cancellation & Returns",
-      "Terms Of Use",
-      "Security",
-      "Privacy"
+      { name: "Cancellation & Returns", href: "/returns" },
+      { name: "Terms Of Use", href: "/terms" },
+      { name: "Security", href: "/security" },
+      { name: "Privacy", href: "/privacy" }
     ],
   },
 ];
+
+
 
 export default function Footer() {
   return (
@@ -43,9 +50,12 @@ export default function Footer() {
                 <h4 className="text-sm font-semibold text-gray-100 mb-3">{c.title}</h4>
                 <ul className="space-y-2 text-sm">
                   {c.links.map((l) => (
-                    <li key={l}>
-                      <Link href="#" className="text-gray-300 hover:text-white">
-                        {l}
+                    <li key={l.name}>
+                      <Link 
+                        href={l.href} 
+                        className="text-gray-300 hover:text-white transition-colors"
+                      >
+                        {l.name}
                       </Link>
                     </li>
                   ))}

@@ -5,6 +5,7 @@ import { removeFromCart, updateQuantity, clearCart } from "../../features/cart/c
 import Link from "next/link";
 import { Trash2, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { color } from "@/components/ui/theme/Color";
 
 export default function CartPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -45,10 +46,10 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-6">
+    <main className="container min-h-screen mx-auto py-3 px-4">
+      <div className=" mx-auto px-4 py-6 bg-white rounded shadow">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-2">
           <h1 className="text-xl font-bold text-gray-800">Your Cart</h1>
           <Link
             href="/"
@@ -62,7 +63,9 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded shadow  overflow-hidden">
+            <div className="rounded shadow  overflow-hidden"
+            style={{background:color.secondary}}
+            >
               <div className="divide-y divide-gray-200">
                 {cartItems.map((item) => {
                   const itemPrice = item.offerPrice || item.price;
@@ -176,7 +179,9 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded shadow p-6 sticky top-20">
+            <div className=" rounded shadow p-6 sticky top-20" 
+            style={{background:color.secondary}}
+            >
               <h2 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
 
               <div className="space-y-3 mb-6 border-b border-gray-200 pb-6">

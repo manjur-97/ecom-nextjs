@@ -15,7 +15,9 @@ export default function UserSidebar({ activeTab }: UserSidebarProps) {
   const user = useSelector((state: RootState) => state.user);
 
   const handleSignOut = () => {
+    localStorage.removeItem("userAuth");
     dispatch(logout());
+
     router.push("/login");
   };
 
