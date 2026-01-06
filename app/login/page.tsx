@@ -1,16 +1,17 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { login, logout } from "../../features/user/userSlice";
+// import { login, logout } from "../../features/user/userSlice";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { color } from "@/components/ui/theme/Color";
-import { User, Lock, LogIn, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
-import { Facebook, Github } from "lucide-react";
+import { User, Lock, LogIn, Eye, EyeOff, CheckCircle2, XCircle, Phone, Key } from "lucide-react";
+import { AuthService } from "@/services/auth.service";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [mobile_no, setMobileNo] = useState("");
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -20,33 +21,67 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!username) {
-      setError("Username is required.");
+    if (!mobile_no) {
+      setError("Mobile no is required.");
       return;
     }
-    if (!password) {
-      setError("Password is required.");
+    try {
+      const res = await AuthService.sendLoginOtp({ 'mobile_no': mobile_no });
+
+
+      if (res.data.success) {
+        setStep(2);
+
+      } else {
+        setError(res.data.errors.message || "Failed to send OTP");
+      }
+    } catch (err: any) {
+      // console.log(err)
+      setError(err.response?.data?.errors?.message || "Something went wrong!");
+    }
+
+
+    // localStorage.setItem("userAuth", JSON.stringify({ username, password }));
+    // dispatch(login(username));
+    // setIsAuthenticated(true);
+    // router.push("/");
+  }
+  async function handleLoginOptVerification(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (!otp) {
+      setError("OTP is required.");
       return;
     }
-    if (password.length < 1 || password.length > 8) {
-      setError("Password must be 1 to 8 characters.");
-      return;
+    try {
+      const res = await AuthService.verifyLoginOtp({ 'mobile_no': mobile_no, 'otp': otp });
+
+
+      if (res.data.success) {
+
+        router.push("/");
+      } else {
+        setError(res.data.errors.message || "Failed to send OTP");
+      }
+    } catch (err: any) {
+      // console.log(err)
+      setError(err.response?.data?.errors?.message || "Something went wrong!");
     }
-    localStorage.setItem("userAuth", JSON.stringify({ username, password }));
-    dispatch(login(username));
-    setIsAuthenticated(true);
-    router.push("/");
+
+    // localStorage.setItem("userAuth", JSON.stringify({ username, password }));
+    // dispatch(login(username));
+    // setIsAuthenticated(true);
+    // router.push("/");
   }
 
   function handleLogout() {
     localStorage.removeItem("userAuth");
-    dispatch(logout());
+    // dispatch(logout());
     setIsAuthenticated(false);
-    setUsername("");
-    setPassword("");
+    setMobileNo("");
   }
 
   function handleSocialLogin(provider: string) {
@@ -104,73 +139,92 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-5">
-              {/* Username Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User size={20} className="text-gray-400" />
+            {step === 1 ? (
+              <form onSubmit={handleLogin} className="space-y-5">
+                {/* Username Field */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mobile No
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Phone size={20} className="text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
+                      style={{
+                        borderColor: error && !mobile_no ? "#EF4444" : "#D1D5DB"
+                      }}
+                      placeholder="Enter your mobile no (01XXXXXXXXX)"
+                      value={mobile_no}
+                      onChange={e => setMobileNo(e.target.value)}
+                      autoComplete="mobile_no"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    className="w-full pl-12 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
-                    style={{
-                      borderColor: error && !username ? "#EF4444" : "#D1D5DB"
-                    }}
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    autoComplete="username"
-                  />
                 </div>
-              </div>
 
-              {/* Password Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock size={20} className="text-gray-400" />
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-6 rounded-lg text-white font-semibold transition-all transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                  style={{ background: color.primary }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#309A38'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = color.primary}
+                >
+                  <LogIn size={20} />
+                  Send Otp
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleLoginOptVerification} className="space-y-5">
+
+
+                {/* Otp Field */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    OTP
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Key size={20} className="text-gray-400" />
+                    </div>
+                    <input
+                      type='text'
+                      className="w-full pl-12 pr-12 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
+                      style={{
+                        borderColor: error && !otp ? "#EF4444" : "#D1D5DB"
+                      }}
+                      placeholder="Enter your OTP "
+                      value={otp}
+                      onChange={e => setOtp(e.target.value)}
+                      autoComplete="otp"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
                   </div>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="w-full pl-12 pr-12 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all"
-                    style={{
-                      borderColor: error && !password ? "#EF4444" : "#D1D5DB"
-                    }}
-                    placeholder="Enter your password (1-8 chars)"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
+                  <p className="text-xs text-gray-500 mt-1">Password must be 1-8 characters</p>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Password must be 1-8 characters</p>
-              </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full py-3.5 px-6 rounded-lg text-white font-semibold transition-all transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
-                style={{ background: color.primary }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#309A38'}
-                onMouseLeave={(e) => e.currentTarget.style.background = color.primary}
-              >
-                <LogIn size={20} />
-                Sign In
-              </button>
-            </form>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-6 rounded-lg text-white font-semibold transition-all transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
+                  style={{ background: color.primary }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#309A38'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = color.primary}
+                >
+                  <LogIn size={20} />
+                  Submit
+                </button>
+              </form>
+            )}
 
             {/* Divider */}
             <div className="my-6 flex items-center">

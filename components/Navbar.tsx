@@ -21,23 +21,20 @@ export default function Navbar() {
   const cartCount = useSelector((state: RootState) => state.cart.items.length);
   const categories = useSelector((state: RootState) => state.categories.items);
   const username = useSelector((state: RootState) => state.user.username);
+
   const dispatch = useDispatch();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   let profileMenuTimeout: NodeJS.Timeout | null = null;
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const user = localStorage.getItem("userAuth");
-    return !!user;
-  });
+
 
   const handleSearch = useCallback((query: string) => {
 
     if (query.trim()) {
       router.push(`/listing?search=${encodeURIComponent(query.trim())}`);
-    }else {
+    } else {
       router.push(`/`);
     }
   }, [router]);
@@ -45,7 +42,7 @@ export default function Navbar() {
   function handleLogout() {
     localStorage.removeItem("userAuth");
     dispatch(logout());
-    setIsAuthenticated(false);
+
 
   }
 
@@ -204,8 +201,11 @@ export default function Navbar() {
                         > Hello, {username}</span>
                         <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="/account"
                           style={{ ['--hover-bg' as any]: color.primary }}
-                        >Profile</Link>
-                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="account/change-password"
+                        >Manage Account</Link>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="/account/orders"
+                          style={{ ['--hover-bg' as any]: color.primary }}
+                        >My Orders</Link>
+                        <Link className="block px-4 py-2 hover:bg-[var(--hover-bg)] hover:text-white" href="/account/password"
                           style={{ ['--hover-bg' as any]: color.primary }}
                         >Change Password</Link>
                         <button className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-700" onClick={() => handleLogout()}>Logout</button>
@@ -229,9 +229,9 @@ export default function Navbar() {
           <input
             type="search"
             placeholder="Search for Products, Brands and More"
-            value={mobileSearchQuery}
-            onChange={(e) => setMobileSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 h-8 border-none rounded-sm text-sm  focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 h-9 border-none rounded-sm text-sm placeholder:text-gray-500 focus-visible:ring-2 focus-visible:ring-yellow-400 shadow-sm"
             style={{ background: color.secondary, color: color.secondaryText }}
           />
           <button className="absolute right-3 top-1/2 -translate-y-1/2 bg-green-700 text-white px-4 py-1 rounded-sm text-sm font-medium hover:bg-green-600"

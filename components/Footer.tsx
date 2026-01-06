@@ -16,7 +16,7 @@ const cols = [
       { name: "Stories", href: "/stories" },
     ],
   },
-  
+
   {
     title: "HELP",
     links: [
@@ -51,8 +51,8 @@ export default function Footer() {
                 <ul className="space-y-2 text-sm">
                   {c.links.map((l) => (
                     <li key={l.name}>
-                      <Link 
-                        href={l.href} 
+                      <Link
+                        href={l.href}
                         className="text-gray-300 hover:text-white transition-colors"
                       >
                         {l.name}
@@ -65,14 +65,13 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-2 space-y-6">
-        
+
             <div>
               <h4 className="text-sm font-semibold text-gray-100 mb-2">Registered Office Address:</h4>
               <address className="not-italic text-sm text-gray-300 leading-relaxed">
-                Flipkart Internet Private Limited,
-                <br /> Buildings Alyssa, Begonia & Clove Embassy Tech Village,
-                <br /> Outer Ring Road, Devarabeesanahalli Village,
-                <br /> Bengaluru, 560103, Karnataka, India
+                One Minute Bazar,<br />
+                1280/A, Mirpur-12,<br />
+                Dhaka, 1216, Bangladesh
               </address>
               <p className="text-sm text-gray-300 leading-relaxed">Mobile: 01632480646</p>
               <p className="text-sm text-gray-300 leading-relaxed">Email: company@gmail.com</p>
@@ -103,7 +102,7 @@ export default function Footer() {
 
           <div className="flex items-center gap-6">
             <div className="text-sm text-gray-400">© 2007-2025 Flipkart.com</div>
-            
+
           </div>
         </div>
       </div>

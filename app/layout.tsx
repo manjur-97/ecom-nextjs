@@ -35,14 +35,14 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} antialiased`}
-        style={{background:'#F5F3FF'}}
+        style={{ background: '#F5F3FF' }}
       >
 
         <Providers>
           <Navbar />
-        {children}
+          {children}
 
-        <Footer />
+          <Footer />
         </Providers>
       </body>
     </html>
